@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.Props" />
+  </Folder>
+  <Project Path="src/IncidentAtlas.Application/IncidentAtlas.Application.csproj" />
+  <Project Path="src/IncidentAtlas.Domain/IncidentAtlas.Domain.csproj" />
+  <Project Path="src/IncidentAtlas.Infrastructure/IncidentAtlas.Infrastructure.csproj" />
+  <Project Path="src/IncidentAtlas.Web/IncidentAtlas.Web.csproj" />
+</Solution>

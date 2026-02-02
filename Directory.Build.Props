@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <!-- C# language features -->
+    <LangVersion>latest</LangVersion>
+
+    <!-- Nullable reference types -->
+    <Nullable>enable</Nullable>
+
+    <!-- Implicit global using directives -->
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Compiler strictness -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,6 @@
+@IncidentAtlas.Web_HostAddress = http://localhost:5284
+
+GET {{IncidentAtlas.Web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IncidentAtlas.Application\IncidentAtlas.Application.csproj" />
+    <ProjectReference Include="..\IncidentAtlas.Domain\IncidentAtlas.Domain.csproj" />
+    <ProjectReference Include="..\IncidentAtlas.Infrastructure\IncidentAtlas.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
