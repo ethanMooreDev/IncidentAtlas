@@ -19,7 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\IncidentAtlas.Application\IncidentAtlas.Application.csproj" />
     <ProjectReference Include="..\..\src\IncidentAtlas.Domain\IncidentAtlas.Domain.csproj" />
+    <ProjectReference Include="..\..\src\IncidentAtlas.Infrastructure\IncidentAtlas.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\IncidentAtlas.Web\IncidentAtlas.Web.csproj" />
   </ItemGroup>
 
 </Project>

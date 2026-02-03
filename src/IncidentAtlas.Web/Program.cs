@@ -1,3 +1,6 @@
+using IncidentAtlas.Application.Handlers;
+using IncidentAtlas.Application.Interfaces;
+using IncidentAtlas.Web.Repositories;
 using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +11,11 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IIncidentRepository, InMemoryIncidentRepository>();
+
+builder.Services.AddTransient<CreateIncidentHandler>();
+builder.Services.AddTransient<AppendIncidentEventHandler>();
 
 var app = builder.Build();
 

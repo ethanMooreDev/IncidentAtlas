@@ -3,7 +3,7 @@
 namespace IncidentAtlas.Web.Controllers;
 
 [ApiController]
-[Route("/api/health")]
+[Route("/api/[controller]")]
 public class HealthController : ControllerBase
 {
     [HttpGet]
