@@ -12,6 +12,9 @@ public sealed class IncidentEventConfiguration : IEntityTypeConfiguration<Incide
 
         builder.HasKey(e => e.IncidentEventId);
 
+        builder.Property(e => e.IncidentEventId)
+            .ValueGeneratedOnAdd();
+
         builder.Property(e => e.IncidentId)
             .IsRequired();
 

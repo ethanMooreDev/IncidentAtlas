@@ -24,7 +24,7 @@ public sealed class AppendIncidentEventHandler
             throw new InvalidOperationException("Incident not found.");
         }
 
-        incident.AppendEvent(
+        var incidentEvent = incident.AppendEvent(
             command.Title,
             command.Type,
             command.OccurredAt,
@@ -32,6 +32,7 @@ public sealed class AppendIncidentEventHandler
             command.CreatedBy
         );
 
-        // No need to call update if using tracked entities later
+        await _repository.AddEventAsync(incidentEvent, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
     }
 }

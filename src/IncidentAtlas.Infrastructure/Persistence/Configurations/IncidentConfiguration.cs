@@ -12,6 +12,9 @@ public sealed class IncidentConfiguration : IEntityTypeConfiguration<Incident>
 
         builder.HasKey(i => i.IncidentId);
 
+        builder.Property(e => e.IncidentId)
+            .ValueGeneratedOnAdd();
+
         builder.Property(i => i.Title)
             .IsRequired()
             .HasMaxLength(200);
@@ -31,6 +34,9 @@ public sealed class IncidentConfiguration : IEntityTypeConfiguration<Incident>
             .WithOne()
             .HasForeignKey(i => i.IncidentId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Metadata.FindNavigation(nameof(Incident.Events))!
+            .SetField("_events");
 
         builder.Navigation(i => i.Events)
             .UsePropertyAccessMode(PropertyAccessMode.Field);

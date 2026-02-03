@@ -19,11 +19,22 @@ builder.Services.AddDbContext<IncidentAtlasDbContext>(options =>
 });
 
 builder.Services.AddScoped<IIncidentRepository, EfIncidentRepository>();
-
 builder.Services.AddTransient<CreateIncidentHandler>();
 builder.Services.AddTransient<AppendIncidentEventHandler>();
 
+builder.Services.AddScoped<IIncidentReadStore, EfIncidentReadStore>();
+builder.Services.AddScoped<GetIncidentListHandler>();
+builder.Services.AddScoped<GetIncidentDetailHandler>();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<IncidentAtlasDbContext>();
+    var conn = db.Database.GetDbConnection();
+    Console.WriteLine($"DB DataSource: {conn.DataSource}");
+    Console.WriteLine($"DB Database:  {conn.Database}");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

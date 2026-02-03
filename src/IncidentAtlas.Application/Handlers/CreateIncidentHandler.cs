@@ -28,6 +28,8 @@ public sealed class CreateIncidentHandler
 
         await _repository.AddAsync(incident, cancellationToken);
 
+        await _repository.SaveChangesAsync(cancellationToken);
+
         return incident.IncidentId;
     }
 }

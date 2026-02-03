@@ -14,9 +14,19 @@ public class InMemoryIncidentRepository : IIncidentRepository
         return Task.CompletedTask;
     }
 
+    public Task AddEventAsync(IncidentEvent incidentEvent, CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Incident?> GetByIdAsync(Guid incidentId, CancellationToken cancellationToken)
     {
         _store.TryGetValue(incidentId, out var incident);
         return Task.FromResult(incident);
+    }
+
+    public Task SaveChangesAsync(CancellationToken ct)
+    {
+        return Task.CompletedTask;
     }
 }

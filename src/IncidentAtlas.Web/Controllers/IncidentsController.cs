@@ -1,6 +1,9 @@
 ﻿using IncidentAtlas.Application.Commands;
 using IncidentAtlas.Application.Handlers;
 using IncidentAtlas.Application.Interfaces;
+using IncidentAtlas.Application.Queries;
+using IncidentAtlas.Application.ReadModels;
+using IncidentAtlas.Domain.Enums;
 using IncidentAtlas.Web.Contracts.Incidents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -32,28 +35,13 @@ public class IncidentsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { incidentId = id }, new CreateIncidentResponse(id));
     }
 
-    [HttpGet("{incidentId:guid}")]
-    public async Task<ActionResult<IncidentResponse>> GetById(
-        [FromServices] IIncidentRepository repository,
-        [FromRoute] Guid incidentId,
-        CancellationToken cancellationToken)
-    {
-        var incident = await repository.GetByIdAsync(incidentId, cancellationToken);
-        if (incident is null)
-        {
-            return NotFound();
-        }
-
-        var response = IncidentResponse.FromDomain(incident);
-        return Ok(response);
-    }
-
     [HttpPost("{incidentId:guid}/events")]
     public async Task<IActionResult> AppendEvent(
-    [FromServices] AppendIncidentEventHandler handler,
-    [FromRoute] Guid incidentId,
-    [FromBody] AppendIncidentEventRequest request,
-    CancellationToken cancellationToken)
+        [FromServices] AppendIncidentEventHandler handler,
+        [FromRoute] Guid incidentId,
+        [FromBody] AppendIncidentEventRequest request,
+        CancellationToken cancellationToken
+    )
     {
         var command = new AppendIncidentEventCommand(
             incidentId,
@@ -66,5 +54,31 @@ public class IncidentsController : ControllerBase
 
         await handler.Handle(command, cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyList<IncidentSummaryDto>>> GetList(
+        [FromServices] GetIncidentListHandler handler,
+        [FromQuery] int skip = 0,
+        [FromQuery] int take = 50,
+        [FromQuery] IncidentStatus? status = null,
+        [FromQuery] IncidentSeverity? severity = null,
+        CancellationToken ct = default
+    )
+    {
+        var query = new GetIncidentListQuery(take, skip, status, severity);
+        var results = await handler.Handle(query, ct);
+        return Ok(results);
+    }
+
+    [HttpGet("{incidentId:guid}")]
+    public async Task<ActionResult<IncidentDetailDto>> GetById(
+        [FromServices] GetIncidentDetailHandler handler,
+        [FromRoute] Guid incidentId,
+        CancellationToken ct
+    )
+    {
+        var result = await handler.Handle(new GetIncidentDetailQuery(incidentId), ct);
+        return result is null ? NotFound() : Ok(result);
     }
 }
