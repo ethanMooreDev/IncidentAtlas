@@ -20,6 +20,20 @@ public class Incident
         Guid incidentId,
         string title,
         IncidentSeverity severity,
+        DateTimeOffset createdAtUtc
+    )
+    {
+        IncidentId = incidentId;
+        Title = title;
+        Severity = severity;
+        Status = IncidentStatus.Active;
+        CreatedAtUtc = createdAtUtc;
+    }
+
+    private Incident(
+        Guid incidentId,
+        string title,
+        IncidentSeverity severity,
         IncidentStatus incidentStatus,
         DateTimeOffset createdAtUtc,
         IReadOnlyList<IncidentEvent> events
