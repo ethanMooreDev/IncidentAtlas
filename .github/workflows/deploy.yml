@@ -44,9 +44,15 @@ jobs:
       - name: Publish ASP.NET app
         run: dotnet publish src/IncidentAtlas.Web/IncidentAtlas.Web.csproj -c Release -o ./publish
 
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           package: ./publish
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
