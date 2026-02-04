@@ -10,6 +10,10 @@ env:
   DOTNET_VERSION: 10.0.x
   NODE_VERSION: 22.x
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
