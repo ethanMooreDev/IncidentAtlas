@@ -1,6 +1,7 @@
 using IncidentAtlas.Application.Handlers;
 using IncidentAtlas.Application.Interfaces;
 using IncidentAtlas.Infrastructure.Persistence;
+using IncidentAtlas.Web.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,22 @@ builder.Services.AddScoped<IIncidentReadStore, EfIncidentReadStore>();
 builder.Services.AddScoped<GetIncidentListHandler>();
 builder.Services.AddScoped<GetIncidentDetailHandler>();
 
+builder.Services.AddTransient<ApiExceptionMiddleware>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevCors", policy =>
+        policy
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+    );
+});
+
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -42,6 +59,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors("DevCors");
 }
 
 app.UseHttpsRedirection();
@@ -49,6 +68,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseStaticFiles();
+
+app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.MapControllers();
 app.MapFallbackToFile("/index.html");

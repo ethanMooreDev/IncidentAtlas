@@ -40,5 +40,10 @@ public sealed class IncidentConfiguration : IEntityTypeConfiguration<Incident>
 
         builder.Navigation(i => i.Events)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Property(i => i.RowVersion)
+            .IsRowVersion()
+            .IsConcurrencyToken();
+
     }
 }

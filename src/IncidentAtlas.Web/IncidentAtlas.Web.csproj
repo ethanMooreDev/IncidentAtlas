@@ -21,4 +21,8 @@
     <ProjectReference Include="..\IncidentAtlas.Infrastructure\IncidentAtlas.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp\src\pages\" />
+  </ItemGroup>
+
 </Project>
