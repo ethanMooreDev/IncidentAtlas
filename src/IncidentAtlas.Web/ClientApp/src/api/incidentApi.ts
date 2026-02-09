@@ -1,7 +1,6 @@
 ﻿// ClientApp/src/api/incidentApi.ts
 
 import type { IncidentSummaryDto } from "../types/incident";
-import { IncidentEventType, IncidentSeverity, IncidentStatus } from '../types/incident';
 
 const BASE_URL = "/api/incidents";
 
