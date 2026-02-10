@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './IncidentDetailPage.css';
 import { getIncidentDetail, appendIncidentEvent } from '../api/incidentApi';
 import type { IncidentDetailDto } from '../types/incident';
-import { IncidentEventType, IncidentSeverity, IncidentStatus } from '../types/incident';
+import { IncidentEventType, IncidentSeverity, IncidentStatus, AppendIncidentEventRequest } from '../types/incident';
 import { getEnumDisplayName } from '../utils/enumUtils';
 
 const IncidentDetailPage: React.FC = () => {
@@ -13,12 +13,12 @@ const IncidentDetailPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<AppendIncidentEventRequest>({
         title: '',
         type: IncidentEventType.IncidentDeclared,
-        occurredAt: new Date().toISOString(),
-        details: '',
-        createdBy: ''
+        occurredAtUtc: new Date(), // Store as UTC ISO string
+        details: undefined,
+        createdBy: undefined
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,7 +26,7 @@ const IncidentDetailPage: React.FC = () => {
         const fetchIncident = async () => {
             try {
                 if (id) {
-                    const data = await getIncidentDetail<IncidentDetailDto>(id);
+                    const data = await getIncidentDetail(id);
                     setIncident(data);
                 }
             } catch (err) {
@@ -43,7 +43,11 @@ const IncidentDetailPage: React.FC = () => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'type' ? Number(value) as IncidentEventType : value
+            [name]: name === 'type' 
+                ? Number(value) as IncidentEventType 
+                : name === 'occurredAtUtc' 
+                ? new Date(value) // Store as a Date object
+                : value
         }));
     };
 
@@ -54,14 +58,14 @@ const IncidentDetailPage: React.FC = () => {
         try {
             if (id) {
                 await appendIncidentEvent(id, formData);
-                const updatedIncident = await getIncidentDetail<IncidentDetailDto>(id);
+                const updatedIncident = await getIncidentDetail(id);
                 setIncident(updatedIncident);
                 setFormData({
                     title: '',
                     type: IncidentEventType.IncidentDeclared,
-                    occurredAt: new Date().toISOString(),
-                    details: '',
-                    createdBy: ''
+                    occurredAtUtc: new Date(),
+                    details: undefined,
+                    createdBy: undefined
                 });
                 setIsModalOpen(false);
             }
@@ -99,7 +103,7 @@ const IncidentDetailPage: React.FC = () => {
                 <p><strong>Type:</strong> {getEnumDisplayName(IncidentEventType, incident.events[0]?.type)}</p>
                 <p><strong>Severity:</strong> {getEnumDisplayName(IncidentSeverity, incident.severity)}</p>
                 <p><strong>Status:</strong> {getEnumDisplayName(IncidentStatus, incident.status)}</p>
-                <p><strong>Created At:</strong> {new Date(incident.createdAtUtc).toLocaleString()}</p>
+                <p><strong>Created At:</strong> {new Date(incident.createdAtUtc).toLocaleString(undefined, { timeZone: 'UTC', timeZoneName: 'short' })}</p>
                 <p><strong>Details:</strong> {incident.events[0]?.details}</p>
                 <p><strong>Created By:</strong> {incident.events[0]?.createdBy}</p>
             </div>
@@ -117,7 +121,7 @@ const IncidentDetailPage: React.FC = () => {
                 <tbody>
                     {incident.events.map(event => (
                         <tr key={event.incidentEventId}>
-                            <td>{new Date(event.occurredAtUtc).toLocaleString()}</td>
+                            <td>{new Date(event.occurredAtUtc).toLocaleString(undefined, { timeZone: 'UTC', timeZoneName: 'short' })}</td>
                             <td>{getEnumDisplayName(IncidentEventType, event.type)}</td>
                             <td>{event.title}</td>
                             <td>{event.details || 'N/A'}</td>
@@ -165,7 +169,7 @@ const IncidentDetailPage: React.FC = () => {
                                         id="occurredAt"
                                         type="datetime-local"
                                         name="occurredAt"
-                                        value={formData.occurredAt}
+                                        value={formData.occurredAtUtc.toISOString()}
                                         onChange={handleInputChange}
                                     />
                                 </label>

@@ -1,6 +1,6 @@
 ﻿// ClientApp/src/api/incidentApi.ts
 
-import type { IncidentSummaryDto } from "../types/incident";
+import type { IncidentSummaryDto, IncidentDetailDto, AppendIncidentEventRequest, CreateIncidentRequest } from "../types/incident";
 
 const BASE_URL = "/api/incidents";
 
@@ -56,19 +56,19 @@ export async function getIncidents(): Promise<Array<IncidentSummaryDto>> {
     return data
 }
 
-export async function getIncidentDetail<T = unknown>(id: string): Promise<T> {
+export async function getIncidentDetail(id: string): Promise<IncidentDetailDto> {
     const response = await fetch(`${BASE_URL}/${id}`, {
         method: "GET",
         headers: { Accept: "application/json" },
     });
 
-    return handleResponse<T>(response);
+    return handleResponse<IncidentDetailDto>(response);
 }
 
-export async function appendIncidentEvent<TResponse = unknown, TPayload = unknown>(
+export async function appendIncidentEvent(
     id: string,
-    payload: TPayload
-): Promise<TResponse> {
+    payload: AppendIncidentEventRequest
+): Promise<void> {
     const response = await fetch(`${BASE_URL}/${id}/events`, {
         method: "POST",
         headers: {
@@ -78,5 +78,19 @@ export async function appendIncidentEvent<TResponse = unknown, TPayload = unknow
         body: JSON.stringify(payload),
     });
 
-    return handleResponse<TResponse>(response);
+    return handleResponse<void>(response);
+}
+
+export async function createIncident(payload: CreateIncidentRequest): Promise<string> {
+    const response = await fetch(BASE_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const data = await handleResponse<{ id: string }>(response);
+    return data.id; // Return the ID of the newly created incident
 }

@@ -22,83 +22,97 @@
 //}
 
 export class IncidentSummaryDto {
-    public readonly incidentId: string
-    public readonly title: string
-    public readonly severity: number
-    public readonly status: number
-    public readonly createdAtUtc: Date
-    public readonly latestEventAtUtc: Date
-    public readonly eventCount: number
+    public readonly incidentId: string;
+    public readonly title: string;
+    public readonly severity: IncidentSeverity;
+    public readonly status: IncidentStatus;
+    public readonly createdAtUtc: Date;
+    public readonly latestEventAtUtc: Date;
+    public readonly eventCount: number;
 
-    constructor(incidentId: string, title: string, severity: number,
-        status: number, createdAtUtc: Date, latestEventAtUtc: Date, eventCount: number)
-    {
-        this.incidentId = incidentId
-        this.title = title
-        this.severity = severity
-        this.status = status
-        this.createdAtUtc = createdAtUtc
-        this.latestEventAtUtc = latestEventAtUtc
-        this.eventCount = eventCount
+    constructor(incidentId: string, title: string, severity: IncidentSeverity,
+        status: IncidentStatus, createdAtUtc: Date, latestEventAtUtc: Date, eventCount: number) {
+        this.incidentId = incidentId;
+        this.title = title;
+        this.severity = severity;
+        this.status = status;
+        this.createdAtUtc = createdAtUtc;
+        this.latestEventAtUtc = latestEventAtUtc;
+        this.eventCount = eventCount;
     }
 }
 
 export class IncidentDetailDto {
-    public readonly incidentId: string
-    public readonly title: string
-    public readonly severity: number
-    public readonly status: number
-    public readonly createdAtUtc: Date
-    public readonly events: Array<IncidentEventDto>
+    public readonly incidentId: string;
+    public readonly title: string;
+    public readonly severity: IncidentSeverity;
+    public readonly status: IncidentStatus;
+    public readonly createdAtUtc: Date;
+    public readonly events: Array<IncidentEventDto>;
 
-    constructor(incidentId: string, title: string, severity: number,
-        status: number, createdAtUtc: Date, events: Array<IncidentEventDto>) {
-        this.incidentId = incidentId
-        this.title = title
-        this.severity = severity
-        this.status = status
-        this.createdAtUtc = createdAtUtc
-        this.events = events
+    constructor(incidentId: string, title: string, severity: IncidentSeverity,
+        status: IncidentStatus, createdAtUtc: Date, events: Array<IncidentEventDto>) {
+        this.incidentId = incidentId;
+        this.title = title;
+        this.severity = severity;
+        this.status = status;
+        this.createdAtUtc = createdAtUtc;
+        this.events = events;
     }
 }
 
 export class IncidentEventDto {
-    public readonly incidentEventId: string
-    public readonly sequence: number
-    public readonly occurredAtUtc: Date
-    public readonly type: number
-    public readonly title: string
-    public readonly details?: string
-    public readonly createdBy?: string
+    public readonly incidentEventId: string;
+    public readonly sequence: number;
+    public readonly occurredAtUtc: Date;
+    public readonly type: IncidentEventType;
+    public readonly title: string;
+    public readonly details?: string;
+    public readonly createdBy?: string;
 
     constructor(incidentEventId: string, sequence: number, occurredAtUtc: Date,
-        type: number, title: string, details?: string, createdBy?: string)
-    {
-        this.incidentEventId = incidentEventId
-        this.sequence = sequence
-        this.occurredAtUtc = occurredAtUtc
-        this.type = type
-        this.title = title
-        this.details = details
-        this.createdBy = createdBy
+        type: IncidentEventType, title: string, details?: string, createdBy?: string) {
+        this.incidentEventId = incidentEventId;
+        this.sequence = sequence;
+        this.occurredAtUtc = occurredAtUtc;
+        this.type = type;
+        this.title = title;
+        this.details = details;
+        this.createdBy = createdBy;
     }
 }
 
 export class AppendIncidentEventRequest {
-    public readonly type: number
-    public readonly occurredAtUtc: Date
-    public readonly title: string
-    public readonly details?: string
-    public readonly createdBy?: string
+    public readonly type: IncidentEventType;
+    public readonly occurredAtUtc: Date;
+    public readonly title: string;
+    public readonly details?: string;
+    public readonly createdBy?: string;
 
-    constructor(type: number, occurredAtUtc: Date, title: string,
-        details?: string, createdBy?: string)
-    {
-        this.type = type
-        this.occurredAtUtc = occurredAtUtc
-        this.title = title
-        this.details = details
-        this.createdBy = createdBy
+    constructor(type: IncidentEventType, occurredAtUtc: Date, title: string,
+        details?: string, createdBy?: string) {
+        this.type = type;
+        this.occurredAtUtc = occurredAtUtc;
+        this.title = title;
+        this.details = details;
+        this.createdBy = createdBy;
+    }
+}
+
+export class CreateIncidentRequest {
+    public readonly title: string;
+    public readonly severity: IncidentSeverity;
+    public readonly occurredAtUtc: Date;
+    public readonly details?: string;
+    public readonly createdBy?: string;
+
+    constructor(title: string, severity: IncidentSeverity, occurredAtUtc: Date,
+        details?: string, createdBy?: string) {
+        this.title = title;
+        this.severity = severity;
+        this.occurredAtUtc = occurredAtUtc;
+        this.details = details;
+        this.createdBy = createdBy;
     }
 }
 
