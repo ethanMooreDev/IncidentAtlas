@@ -1,5 +1,6 @@
 using IncidentAtlas.Application.Handlers;
 using IncidentAtlas.Application.Interfaces;
+using IncidentAtlas.Infrastructure.AI;
 using IncidentAtlas.Infrastructure.Persistence;
 using IncidentAtlas.Web.Middleware;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,12 @@ builder.Services.AddScoped<GetIncidentListHandler>();
 builder.Services.AddScoped<GetIncidentDetailHandler>();
 
 builder.Services.AddTransient<ApiExceptionMiddleware>();
+
+builder.Services.AddScoped<GenerateIncidentSummaryHandler>();
+builder.Services.AddScoped<GenerateIncidentPostmortemDraftHandler>();
+
+builder.Services.AddScoped<IIncidentAiAnalyzer, FakeIncidentAiAnalyzer>();
+
 
 builder.Services.AddCors(options =>
 {
