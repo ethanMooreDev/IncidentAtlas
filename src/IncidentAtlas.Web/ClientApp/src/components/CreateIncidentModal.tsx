@@ -38,11 +38,10 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ isOpen, onClo
     <div className="modal-backdrop">
       <div className="modal">
         <h2>Create New Incident</h2>
-        <p>Use the form below to create a new incident. Fields marked with * are required.</p>
         <form onSubmit={handleSubmit} className="create-incident-form">
           <fieldset>
             <legend>Incident Details</legend>
-            <label htmlFor="title">* Title:
+            <label htmlFor="title">Title:
               <input
                 id="title"
                 type="text"
@@ -53,7 +52,7 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ isOpen, onClo
                 required
               />
             </label>
-            <label htmlFor="severity">* Severity:
+            <label htmlFor="severity">Severity:
               <select
                 id="severity"
                 name="severity"
@@ -66,7 +65,7 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ isOpen, onClo
                 ))}
               </select>
             </label>
-            <label htmlFor="occurredAtUtc">* Occurred At (UTC):
+            <label htmlFor="occurredAtUtc">Occurred At (UTC):
               <input
                 id="occurredAtUtc"
                 type="datetime-local"
@@ -86,6 +85,7 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ isOpen, onClo
                 value={formData.details || ""}
                 onChange={handleInputChange}
                 placeholder="Provide additional details (optional)"
+                required
               />
             </label>
             <label htmlFor="createdBy">Created By:
@@ -96,6 +96,7 @@ const CreateIncidentModal: React.FC<CreateIncidentModalProps> = ({ isOpen, onClo
                 value={formData.createdBy || ""}
                 onChange={handleInputChange}
                 placeholder="Enter your name (optional)"
+                required
               />
             </label>
           </fieldset>

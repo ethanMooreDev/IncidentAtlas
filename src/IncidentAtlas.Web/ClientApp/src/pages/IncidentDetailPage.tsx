@@ -5,6 +5,7 @@ import { getIncidentDetail, appendIncidentEvent } from '../api/incidentApi';
 import type { IncidentDetailDto } from '../types/incident';
 import { IncidentEventType, IncidentSeverity, IncidentStatus, AppendIncidentEventRequest } from '../types/incident';
 import { getEnumDisplayName } from '../utils/enumUtils';
+import AppendEventModal from '../components/AppendEventModal';
 
 const IncidentDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -13,13 +14,6 @@ const IncidentDetailPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
-    const [formData, setFormData] = useState<AppendIncidentEventRequest>({
-        title: '',
-        type: IncidentEventType.IncidentDeclared,
-        occurredAtUtc: new Date(), // Store as UTC ISO string
-        details: undefined,
-        createdBy: undefined
-    });
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
@@ -39,20 +33,7 @@ const IncidentDetailPage: React.FC = () => {
         fetchIncident();
     }, [id]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: name === 'type' 
-                ? Number(value) as IncidentEventType 
-                : name === 'occurredAtUtc' 
-                ? new Date(value) // Store as a Date object
-                : value
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (formData: AppendIncidentEventRequest) => {
         setFormError(null);
 
         try {
@@ -60,13 +41,6 @@ const IncidentDetailPage: React.FC = () => {
                 await appendIncidentEvent(id, formData);
                 const updatedIncident = await getIncidentDetail(id);
                 setIncident(updatedIncident);
-                setFormData({
-                    title: '',
-                    type: IncidentEventType.IncidentDeclared,
-                    occurredAtUtc: new Date(),
-                    details: undefined,
-                    createdBy: undefined
-                });
                 setIsModalOpen(false);
             }
         } catch (err: any) {
@@ -100,7 +74,6 @@ const IncidentDetailPage: React.FC = () => {
             <h1>Incident Details</h1>
             <div className="incident-detail">
                 <p><strong>Title:</strong> {incident.title}</p>
-                <p><strong>Type:</strong> {getEnumDisplayName(IncidentEventType, incident.events[0]?.type)}</p>
                 <p><strong>Severity:</strong> {getEnumDisplayName(IncidentSeverity, incident.severity)}</p>
                 <p><strong>Status:</strong> {getEnumDisplayName(IncidentStatus, incident.status)}</p>
                 <p><strong>Created At:</strong> {new Date(incident.createdAtUtc).toLocaleString(undefined, { timeZone: 'UTC', timeZoneName: 'short' })}</p>
@@ -131,96 +104,12 @@ const IncidentDetailPage: React.FC = () => {
                 </tbody>
             </table>
 
-            {isModalOpen && (
-                <div className="modal-backdrop">
-                    <div className="modal">
-                        <h2>Append Event</h2>
-                        <p>Use the form below to add a new event to this incident. Fields marked with * are required.</p>
-                        <form onSubmit={handleSubmit} className="append-event-form">
-                            <fieldset>
-                                <legend>Event Details</legend>
-                                <label htmlFor="title">* Title:
-                                    <input
-                                        id="title"
-                                        type="text"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter a brief title for the event"
-                                        required
-                                    />
-                                </label>
-                                <label htmlFor="type">* Type:
-                                    <select
-                                        id="type"
-                                        name="type"
-                                        value={formData.type}
-                                        onChange={handleInputChange}
-                                        title="Select the type of incident event"
-                                        required
-                                    >
-                                        {Object.entries(IncidentEventType).map(([key, value]) => (
-                                            <option key={value} value={value}>{key}</option>
-                                        ))}
-                                    </select>
-                                </label>
-                                <label htmlFor="occurredAt">* Occurred At:
-                                    <input
-                                        id="occurredAt"
-                                        type="datetime-local"
-                                        name="occurredAt"
-                                        value={formData.occurredAtUtc.toISOString()}
-                                        onChange={handleInputChange}
-                                    />
-                                </label>
-                            </fieldset>
-                            <fieldset>
-                                <legend>Additional Information</legend>
-                                <label htmlFor="details">Details:
-                                    <textarea
-                                        id="details"
-                                        name="details"
-                                        value={formData.details}
-                                        onChange={handleInputChange}
-                                        placeholder="Provide additional details (optional)"
-                                    />
-                                </label>
-                                <label htmlFor="createdBy">Created By:
-                                    <input
-                                        id="createdBy"
-                                        type="text"
-                                        name="createdBy"
-                                        value={formData.createdBy}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter your name (optional)"
-                                    />
-                                </label>
-                            </fieldset>
-                            <div className="modal-buttons">
-                                <button
-                                    type="button"
-                                    className="cancel-button"
-                                    onClick={() => setIsModalOpen(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="add-button"
-                                >
-                                    Add Event
-                                </button>
-                            </div>
-                        </form>
-                        {formError && (
-                            <div className="form-error">
-                                <p>{formError}</p>
-                                <button onClick={handleSubmit}>Retry</button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+            <AppendEventModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleSubmit}
+                formError={formError}
+            />
         </div>
     );
 };

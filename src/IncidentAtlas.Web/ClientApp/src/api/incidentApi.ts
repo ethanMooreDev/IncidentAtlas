@@ -91,6 +91,6 @@ export async function createIncident(payload: CreateIncidentRequest): Promise<st
         body: JSON.stringify(payload),
     });
 
-    const data = await handleResponse<{ id: string }>(response);
-    return data.id; // Return the ID of the newly created incident
+    const data = await handleResponse<{ incidentId: string }>(response);
+    return data.incidentId; // Return the ID of the newly created incident
 }
