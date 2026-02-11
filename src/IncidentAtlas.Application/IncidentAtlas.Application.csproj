@@ -14,4 +14,8 @@
     <ProjectReference Include="..\IncidentAtlas.Domain\IncidentAtlas.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AI\Models\NewFolder\" />
+  </ItemGroup>
+
 </Project>

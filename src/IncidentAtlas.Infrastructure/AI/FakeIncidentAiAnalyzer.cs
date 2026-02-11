@@ -52,7 +52,7 @@ public sealed class FakeIncidentAiAnalyzer : IIncidentAiAnalyzer
         {
             var incidentEvent = incident.Events[x];
 
-            citations.Prepend(new Citation(
+            citations.Add(new Citation(
                 incidentEvent.IncidentEventId,
                 incidentEvent.Sequence,
                 incidentEvent.Title,
@@ -71,7 +71,8 @@ public sealed class FakeIncidentAiAnalyzer : IIncidentAiAnalyzer
             draftMarkdown,
             citations,
             "Ethan-GPTv2.0",
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            10
         ));
     }
 }

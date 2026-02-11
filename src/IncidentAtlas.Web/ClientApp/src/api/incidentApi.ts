@@ -1,6 +1,19 @@
 ﻿// ClientApp/src/api/incidentApi.ts
 
-import type { IncidentSummaryDto, IncidentDetailDto, AppendIncidentEventRequest, CreateIncidentRequest } from "../types/incident";
+import type { 
+    IncidentSummaryDto,
+    IncidentDetailDto,
+    AppendIncidentEventRequest,
+    CreateIncidentRequest
+} from "../types/incident";
+
+import type {
+  SummaryPreviewResponse,
+  PostmortemPreviewResponse,
+  PublishPostmortemRequest,
+  PublishPostmortemResponse,
+  ApiError as AiApiError
+} from "../types/ai";
 
 const BASE_URL = "/api/incidents";
 
@@ -94,3 +107,49 @@ export async function createIncident(payload: CreateIncidentRequest): Promise<st
     const data = await handleResponse<{ incidentId: string }>(response);
     return data.incidentId; // Return the ID of the newly created incident
 }
+
+async function readJsonSafely(res: Response): Promise<unknown> {
+  const text = await res.text();
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { message: text } satisfies AiApiError;
+  }
+}
+
+function throwIfNotOk(res: Response, body: unknown): asserts res is Response {
+  if (res.ok) return;
+  throw body ?? ({ message: `HTTP ${res.status}` } satisfies AiApiError);
+}
+
+export async function previewSummary(incidentId: string): Promise<SummaryPreviewResponse> {
+  const res = await fetch(`/api/incidents/${incidentId}/ai/summary/preview`, { method: "POST" });
+  const body = await readJsonSafely(res);
+  throwIfNotOk(res, body);
+  return body as SummaryPreviewResponse;
+}
+
+export async function previewPostmortem(incidentId: string): Promise<PostmortemPreviewResponse> {
+  const res = await fetch(`/api/incidents/${incidentId}/ai/postmortem/preview`, { method: "POST" });
+  const body = await readJsonSafely(res);
+  throwIfNotOk(res, body);
+  return body as PostmortemPreviewResponse;
+}
+
+export async function publishPostmortem(
+  incidentId: string,
+  payload: PublishPostmortemRequest
+): Promise<PublishPostmortemResponse> {
+  const res = await fetch(`/api/incidents/${incidentId}/ai/postmortem/publish`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  const body = await readJsonSafely(res);
+  throwIfNotOk(res, body);
+  return body as PublishPostmortemResponse;
+}
+

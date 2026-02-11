@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './IncidentDetailPage.css';
-import { getIncidentDetail, appendIncidentEvent } from '../api/incidentApi';
+import { getIncidentDetail, appendIncidentEvent, previewSummary, previewPostmortem } from '../api/incidentApi';
 import type { IncidentDetailDto } from '../types/incident';
 import { IncidentEventType, IncidentSeverity, IncidentStatus, AppendIncidentEventRequest } from '../types/incident';
 import { getEnumDisplayName } from '../utils/enumUtils';
 import AppendEventModal from '../components/AppendEventModal';
+import type { AiPreviewResult } from '../types/ai';
 
 const IncidentDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -15,6 +16,14 @@ const IncidentDetailPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [summary, setSummary] = useState<AiPreviewResult | null>(null);
+    const [loadingSummary, setLoadingSummary] = useState(false);
+    const [summaryError, setSummaryError] = useState<string | null>(null);
+
+    const [postmortem, setPostmortem] = useState<AiPreviewResult | null>(null);
+    const [loadingPostmortem, setLoadingPostmortem] = useState(false);
+    const [publishState, setPublishState] = useState<"idle" | "publishing" | "published">("idle");
 
     useEffect(() => {
         const fetchIncident = async () => {
@@ -52,6 +61,34 @@ const IncidentDetailPage: React.FC = () => {
         }
     };
 
+    const handleGenerateSummary = async () => {
+        if(id) {
+            setLoadingSummary(true);
+            setSummaryError(null);
+            try {
+                const result = await previewSummary(id);
+                setSummary(result);
+            } catch (err: any) {
+                setSummaryError(err?.message ?? "Failed to generate summary");
+            } finally {
+                setLoadingSummary(false);
+            }
+        }
+    };
+
+    const handleGeneratePostmortem = async () => {
+        if(id) {
+            setLoadingPostmortem(true);
+            try {
+                const result = await previewPostmortem(id);
+                setPostmortem(result);
+                setPublishState("idle");
+            } finally {
+                setLoadingPostmortem(false);
+            }
+        }
+    };
+
     if (loading) {
         return <div className="incident-detail-container">Loading...</div>;
     }
@@ -80,6 +117,38 @@ const IncidentDetailPage: React.FC = () => {
                 <p><strong>Details:</strong> {incident.events[0]?.details}</p>
                 <p><strong>Created By:</strong> {incident.events[0]?.createdBy}</p>
             </div>
+
+            <div className="button-container-right">
+                <button onClick={handleGenerateSummary} disabled={loadingSummary}>Generate Summary</button>
+                <button onClick={handleGeneratePostmortem} disabled={loadingPostmortem}>Generate Postmortem</button>
+            </div>
+
+            {summary && (
+                <div className="summary-container">
+                    <h2>Summary</h2>
+                    <div>
+                        <p><strong>Content:</strong></p>
+                        <p>{summary.contentMarkdown}</p>
+                    </div>
+                    <p><strong>Generated At:</strong> {new Date(summary.generatedAtUtc).toLocaleString()}</p>
+                    {summary.model && <p><strong>Model:</strong> {summary.model}</p>}
+                    {summary.citations.length > 0 && (
+                        <div>
+                            <h3>Citations</h3>
+                            <ul>
+                                {summary.citations.map((citation, index) => (
+                                    <li key={index}>
+                                        <p><strong>Sequence:</strong> {citation.sequence}</p>
+                                        {citation.quote && <p><strong>Quote:</strong> {citation.quote}</p>}
+                                        {citation.reason && <p><strong>Reason:</strong> {citation.reason}</p>}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            )}
+
             <h2>Events</h2>
             <table className="incident-events-table">
                 <thead>

@@ -102,6 +102,13 @@
     cursor: pointer;
 }
 
+.button-container-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
 /* Slightly brightened .append-event-button */
 .append-event-button {
     background-color: #3f4f3f; /* Slightly brighter muted green */
@@ -239,4 +246,11 @@
 .append-event-form textarea {
     resize: vertical;
     min-height: 80px;
+}
+
+.summary-container {
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Inner spacing */
+    margin: 16px 0; /* Space above and below */
 }

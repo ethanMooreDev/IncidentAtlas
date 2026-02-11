@@ -71,15 +71,23 @@ public sealed class IncidentAiController : ControllerBase
     }
 
     [HttpPost("summary/preview")]
-    public async Task<ActionResult<AiSummaryResult>> GetAiSummary(
-        [FromRoute] Guid incidentId,
-        CancellationToken ct
-    )
+    public async Task<ActionResult<SummaryPreviewResponse>> PreviewSummary(
+    Guid incidentId,
+    CancellationToken ct)
     {
         try
         {
-            var result = await _summaryHandler.Handle(new GenerateIncidentSummaryCommand(incidentId), ct);
-            return Ok(result);
+            var result = await _summaryHandler.Handle(
+                new GenerateIncidentSummaryCommand(incidentId),
+                ct);
+
+            return Ok(new SummaryPreviewResponse(
+                ContentMarkdown: result.SummaryMarkdown,
+                Citations: result.Citations,
+                InputEventSequenceMax: result.InputEventSequenceMax,
+                Model: result.Model,
+                GeneratedAtUtc: result.GeneratedAtUtc
+            ));
         }
         catch (InvalidOperationException ex) when (ex.Message.Contains("Incident not found"))
         {

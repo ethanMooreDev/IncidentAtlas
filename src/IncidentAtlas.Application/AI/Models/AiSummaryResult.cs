@@ -4,5 +4,6 @@ public sealed record AiSummaryResult(
     string SummaryMarkdown,
     IReadOnlyList<Citation> Citations,
     string Model,
-    DateTimeOffset GeneratedAtUtc
+    DateTimeOffset GeneratedAtUtc,
+    int InputEventSequenceMax
 );
