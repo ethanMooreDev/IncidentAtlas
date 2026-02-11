@@ -1,5 +1,6 @@
-﻿using IncidentAtlas.Application.AI;
-using IncidentAtlas.Application.AI.Commands;
+﻿using IncidentAtlas.Application.AI.Commands;
+using IncidentAtlas.Application.AI.Handlers;
+using IncidentAtlas.Application.AI.Models;
 using IncidentAtlas.Application.Commands;
 using IncidentAtlas.Application.Handlers;
 using IncidentAtlas.Application.Interfaces;
@@ -81,28 +82,6 @@ public class IncidentsController : ControllerBase
     )
     {
         var result = await handler.Handle(new GetIncidentDetailQuery(incidentId), ct);
-        return result is null ? NotFound() : Ok(result);
-    }
-
-    [HttpPost("{incidentId:guid}/ai/summary")]
-    public async Task<ActionResult<AiSummaryResult>> GetAiSummary(
-        [FromServices] GenerateIncidentSummaryHandler handler,
-        [FromRoute] Guid incidentId,
-        CancellationToken ct
-    )
-    {
-        var result = await handler.Handle(new GenerateIncidentSummaryCommand(incidentId), ct);
-        return result is null ? NotFound() : Ok(result);
-    }
-
-    [HttpPost("{incidentId:guid}/ai/postmortem-draft")]
-    public async Task<ActionResult<AiPostmortemDraftResult>> GetAiPostmortemDraft(
-        [FromServices] GenerateIncidentPostmortemDraftHandler handler,
-        [FromRoute] Guid incidentId,
-        CancellationToken ct
-    )
-    {
-        var result = await handler.Handle(new GenerateIncidentPostmortemDraftCommand(incidentId), ct);
         return result is null ? NotFound() : Ok(result);
     }
 }

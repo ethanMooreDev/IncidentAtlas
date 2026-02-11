@@ -1,4 +1,4 @@
-﻿using IncidentAtlas.Application.AI;
+﻿using IncidentAtlas.Application.AI.Models;
 using IncidentAtlas.Application.Interfaces;
 using IncidentAtlas.Application.ReadModels;
 using System.Text;
@@ -36,7 +36,9 @@ public sealed class FakeIncidentAiAnalyzer : IIncidentAiAnalyzer
         return Task.FromResult<AiPostmortemDraftResult>(new AiPostmortemDraftResult(
             draftMarkdown,
             citations,
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            10,
+            "Ethan-GPTv2.0"
         ));
     }
 

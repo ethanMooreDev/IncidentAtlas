@@ -1,4 +1,4 @@
-﻿namespace IncidentAtlas.Application.AI;
+﻿namespace IncidentAtlas.Application.AI.Models;
 
 public sealed record AiSummaryResult(
     string SummaryMarkdown,

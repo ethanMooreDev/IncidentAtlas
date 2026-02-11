@@ -1,5 +1,5 @@
 ﻿using IncidentAtlas.Application.ReadModels;
-using IncidentAtlas.Application.AI;
+using IncidentAtlas.Application.AI.Models;
 
 namespace IncidentAtlas.Application.Interfaces;
 

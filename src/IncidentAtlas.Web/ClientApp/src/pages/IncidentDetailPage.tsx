@@ -84,6 +84,7 @@ const IncidentDetailPage: React.FC = () => {
             <table className="incident-events-table">
                 <thead>
                     <tr>
+                        <th>Sequence</th>
                         <th>Occurred At</th>
                         <th>Type</th>
                         <th>Title</th>
@@ -94,6 +95,7 @@ const IncidentDetailPage: React.FC = () => {
                 <tbody>
                     {incident.events.map(event => (
                         <tr key={event.incidentEventId}>
+                            <td>{event.sequence}</td>
                             <td>{new Date(event.occurredAtUtc).toLocaleString(undefined, { timeZone: 'UTC', timeZoneName: 'short' })}</td>
                             <td>{getEnumDisplayName(IncidentEventType, event.type)}</td>
                             <td>{event.title}</td>

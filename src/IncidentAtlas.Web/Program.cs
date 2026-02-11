@@ -1,3 +1,5 @@
+using IncidentAtlas.Application.Abstractions;
+using IncidentAtlas.Application.AI.Handlers;
 using IncidentAtlas.Application.Handlers;
 using IncidentAtlas.Application.Interfaces;
 using IncidentAtlas.Infrastructure.AI;
@@ -21,6 +23,8 @@ builder.Services.AddDbContext<IncidentAtlasDbContext>(options =>
 });
 
 builder.Services.AddScoped<IIncidentRepository, EfIncidentRepository>();
+builder.Services.AddScoped<IPostmortemPublishStore, EfPostmortemPublishStore>();
+
 builder.Services.AddTransient<CreateIncidentHandler>();
 builder.Services.AddTransient<AppendIncidentEventHandler>();
 
@@ -32,6 +36,7 @@ builder.Services.AddTransient<ApiExceptionMiddleware>();
 
 builder.Services.AddScoped<GenerateIncidentSummaryHandler>();
 builder.Services.AddScoped<GenerateIncidentPostmortemDraftHandler>();
+builder.Services.AddScoped<PublishPostmortemHandler>();
 
 builder.Services.AddScoped<IIncidentAiAnalyzer, FakeIncidentAiAnalyzer>();
 
