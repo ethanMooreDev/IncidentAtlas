@@ -59,7 +59,7 @@ public sealed class AzureOpenAiIncidentAiAnalyzer : IIncidentAiAnalyzer
                 "You are an incident analysis assistant. " +
                 "Use ONLY the provided incident data. " +
                 "Return ONLY a JSON object that matches the provided JSON schema. " +
-                "Citations must reference provided sequence values in the format [sequence], without (), but not incidentEventId."),
+                "Citations must reference provided sequence values in the format [sequence] or [sequence1, sequence2,..., sequenceN], without (), but not incidentEventId."),
             new UserChatMessage(
                 "Generate a concise incident summary for an on-call engineer.\n" +
                 "Include: current status, impact (if inferable from events), key timeline points.\n" +
@@ -98,7 +98,7 @@ public sealed class AzureOpenAiIncidentAiAnalyzer : IIncidentAiAnalyzer
                 "You are an incident analysis assistant. " +
                 "Use ONLY the provided incident data. " +
                 "Return ONLY a JSON object that matches the provided JSON schema. " +
-                "Citations must reference provided incidentEventId values."),
+                "Citations must reference provided sequence values in the format [sequence] or [sequence1, sequence2,..., sequenceN], without (), but not incidentEventId."),
             new UserChatMessage(
                 "Generate a postmortem DRAFT (markdown) with sections:\n" +
                 "1) Summary\n2) Impact\n3) Timeline\n4) Root cause hypothesis\n5) Contributing factors\n" +

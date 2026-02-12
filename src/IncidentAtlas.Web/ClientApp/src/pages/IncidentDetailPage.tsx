@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './IncidentDetailPage.css';
-import { getIncidentDetail, appendIncidentEvent, previewSummary, previewPostmortem } from '../api/incidentApi';
+import {
+    getIncidentDetail,
+    appendIncidentEvent,
+    previewSummary,
+    previewPostmortem,
+    publishPostmortem,
+    ApiError
+} from '../api/incidentApi';
 import type { IncidentDetailDto } from '../types/incident';
-import { IncidentEventType, IncidentSeverity, IncidentStatus, AppendIncidentEventRequest } from '../types/incident';
+import {
+    IncidentEventType,
+    IncidentSeverity,
+    IncidentStatus,
+    AppendIncidentEventRequest
+} from '../types/incident';
 import { getEnumDisplayName } from '../utils/enumUtils';
 import AppendEventModal from '../components/AppendEventModal';
 import type { AiPreviewResult } from '../types/ai';
@@ -25,6 +37,7 @@ const IncidentDetailPage: React.FC = () => {
     const [postmortem, setPostmortem] = useState<AiPreviewResult | null>(null);
     const [loadingPostmortem, setLoadingPostmortem] = useState(false);
     const [publishState, setPublishState] = useState<"idle" | "publishing" | "published">("idle");
+    const [postmortemError, setPostmortemError] = useState<string | null>(null);
 
     const scrollToEvent = (eventId: string) => {
         const element = document.getElementById(eventId);
@@ -89,18 +102,71 @@ const IncidentDetailPage: React.FC = () => {
         }
     };
 
+    const handlePublishPostmortem = async () => {
+        if (!id || !postmortem) return;
+        setPublishState("publishing");
+        try {
+            const payload = {
+                contentMarkdown: postmortem.contentMarkdown,
+                citations: postmortem.citations,
+                inputEventSequenceMax: postmortem.inputEventSequenceMax,
+                model: postmortem.model ?? null,
+                generatedAtUtc: postmortem.generatedAtUtc,
+                publishedBy: "", // Placeholder
+            };
+            await publishPostmortem(id, payload);
+            setPublishState("published");
+            const updatedIncident = await getIncidentDetail(id);
+            setIncident(updatedIncident);
+        } catch (err: unknown) {
+            let message = "Publish failed. Please try again.";
+
+            if (err instanceof ApiError) {
+                // ApiError.body can be object | array | string | number | boolean | null
+                const body = err.body;
+
+                const errorCode =
+                    body && typeof body === "object" && !Array.isArray(body)
+                        ? (body as Record<string, unknown>)["error"]
+                        : undefined;
+
+                const serverMessage =
+                    body && typeof body === "object" && !Array.isArray(body)
+                        ? (body as Record<string, unknown>)["message"]
+                        : undefined;
+
+                if (err.status === 409 && errorCode === "concurrency_conflict") {
+                    message =
+                        typeof serverMessage === "string" && serverMessage.length > 0
+                            ? serverMessage
+                            : "Incident changed since this draft was generated. Please regenerate.";
+        }
+    }
+
+    setPostmortemError(message);
+    setPublishState("idle");
+}
+    };
+
     const handleGeneratePostmortem = async () => {
         if(id) {
+            setPostmortem(null);
+            setPostmortemError(null);
+            setPublishState("idle");
             setLoadingPostmortem(true);
             try {
-                const result = await previewPostmortem(id);
-                setPostmortem(result);
-                setPublishState("idle");
+                const preview = await previewPostmortem(id);
+                setPostmortem(preview);
+            } catch {
+                setPostmortemError("Failed to generate postmortem. Please try again.");
             } finally {
                 setLoadingPostmortem(false);
             }
         }
     };
+
+    const currentMaxSequence = Math.max(0, ...(incident?.events.map(e => e.sequence) || []));
+    const isStale = postmortem != null && currentMaxSequence > postmortem.inputEventSequenceMax;
 
     if (loading) {
         return <div className="incident-detail-container">Loading...</div>;
@@ -174,6 +240,53 @@ const IncidentDetailPage: React.FC = () => {
                             </div>
                         </div>
                     )}
+                </div>
+            )}
+
+            {postmortem && (
+                <div className="postmortem-container">
+                    <h2>Postmortem</h2>
+                    {postmortem.generatedAtUtc && (
+                        <p>Generated At: {new Date(postmortem.generatedAtUtc).toLocaleString()}</p>
+                    )}
+                    {publishState !== "published" && <p className="draft-marker">DRAFT (not published)</p>}
+                    {postmortem.contentMarkdown.split("\n").map((paragraph, index) => (
+                        <p key={index}>{paragraph}</p>
+                    ))}
+                    {postmortem.citations.length > 0 && (
+                        <div>
+                            <p><strong>Citations:</strong></p>
+                            <div className="content-markdown">
+                                {postmortem.citations.map((citation) => (
+                                    <div key={citation.incidentEventId}>
+                                        <p
+                                            className="short-paragraph"
+                                            onClick={() => scrollToEvent(citation.incidentEventId)}
+                                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                        >
+                                            <strong>[{citation.sequence}]</strong> -- {citation.reason && citation.reason}
+                                        </p>
+                                        {citation.quote && <p className="citation-quote"><strong>Quote:</strong> {citation.quote}</p>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    {isStale && (
+                        <div className="warning-banner">
+                            Incident changed since this draft was generated. Regenerate before publishing.
+                        </div>
+                    )}
+                    {postmortemError && <p className="error-message">{postmortemError}</p>}
+                    {publishState === "idle" && (
+                        <button
+                            onClick={handlePublishPostmortem}
+                            disabled={isStale}
+                        >
+                            Publish Postmortem
+                        </button>
+                    )}
+                    {publishState === "publishing" && <p>Publishing...</p>}
                 </div>
             )}
 

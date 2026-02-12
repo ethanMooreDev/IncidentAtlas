@@ -287,3 +287,35 @@
     align-items: center;
     justify-content: center;
 }
+
+/* Postmortem Draft Section */
+.postmortem-container {
+    border: 1px solid #d9d9d9;
+    padding: 16px;
+    margin-top: 24px;
+    border-radius: 8px;
+}
+
+.draft-marker {
+    color: #ff9800;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.warning-banner {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 12px;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+.published-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
