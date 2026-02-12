@@ -6,9 +6,7 @@ import {
     getIncidentDetail,
     appendIncidentEvent,
     previewSummary,
-    previewPostmortem,
-    publishPostmortem,
-    ApiError
+    previewPostmortem
 } from '../api/incidentApi';
 import type { IncidentDetailDto } from '../types/incident';
 import {
@@ -103,51 +101,51 @@ const IncidentDetailPage: React.FC = () => {
         }
     };
 
-    const handlePublishPostmortem = async () => {
-        if (!id || !postmortem) return;
-        setPublishState("publishing");
-        try {
-            const payload = {
-                contentMarkdown: postmortem.contentMarkdown,
-                citations: postmortem.citations,
-                inputEventSequenceMax: postmortem.inputEventSequenceMax,
-                model: postmortem.model ?? null,
-                generatedAtUtc: postmortem.generatedAtUtc,
-                publishedBy: "", // Placeholder
-            };
-            await publishPostmortem(id, payload);
-            setPublishState("published");
-            const updatedIncident = await getIncidentDetail(id);
-            setIncident(updatedIncident);
-        } catch (err: unknown) {
-            let message = "Publish failed. Please try again.";
+    // const handlePublishPostmortem = async () => {
+    //     if (!id || !postmortem) return;
+    //     setPublishState("publishing");
+    //     try {
+    //         const payload = {
+    //             contentMarkdown: postmortem.contentMarkdown,
+    //             citations: postmortem.citations,
+    //             inputEventSequenceMax: postmortem.inputEventSequenceMax,
+    //             model: postmortem.model ?? null,
+    //             generatedAtUtc: postmortem.generatedAtUtc,
+    //             publishedBy: "", // Placeholder
+    //         };
+    //         await publishPostmortem(id, payload);
+    //         setPublishState("published");
+    //         const updatedIncident = await getIncidentDetail(id);
+    //         setIncident(updatedIncident);
+    //     } catch (err: unknown) {
+    //         let message = "Publish failed. Please try again.";
 
-            if (err instanceof ApiError) {
-                // ApiError.body can be object | array | string | number | boolean | null
-                const body = err.body;
+    //         if (err instanceof ApiError) {
+    //             // ApiError.body can be object | array | string | number | boolean | null
+    //             const body = err.body;
 
-                const errorCode =
-                    body && typeof body === "object" && !Array.isArray(body)
-                        ? (body as Record<string, unknown>)["error"]
-                        : undefined;
+    //             const errorCode =
+    //                 body && typeof body === "object" && !Array.isArray(body)
+    //                     ? (body as Record<string, unknown>)["error"]
+    //                     : undefined;
 
-                const serverMessage =
-                    body && typeof body === "object" && !Array.isArray(body)
-                        ? (body as Record<string, unknown>)["message"]
-                        : undefined;
+    //             const serverMessage =
+    //                 body && typeof body === "object" && !Array.isArray(body)
+    //                     ? (body as Record<string, unknown>)["message"]
+    //                     : undefined;
 
-                if (err.status === 409 && errorCode === "concurrency_conflict") {
-                    message =
-                        typeof serverMessage === "string" && serverMessage.length > 0
-                            ? serverMessage
-                            : "Incident changed since this draft was generated. Please regenerate.";
-        }
-    }
+    //             if (err.status === 409 && errorCode === "concurrency_conflict") {
+    //                 message =
+    //                     typeof serverMessage === "string" && serverMessage.length > 0
+    //                         ? serverMessage
+    //                         : "Incident changed since this draft was generated. Please regenerate.";
+    //                 }
+    //             }
 
-    setPostmortemError(message);
-    setPublishState("idle");
-}
-    };
+    //             setPostmortemError(message);
+    //             setPublishState("idle");
+    //         }
+    // };
 
     const handleGeneratePostmortem = async () => {
         if(id) {
@@ -239,6 +237,7 @@ const IncidentDetailPage: React.FC = () => {
                             </div>
                         </div>
                     )}
+                    {summaryError && <p className="error-message">{summaryError}</p>}
                 </div>
             )}
 
