@@ -273,9 +273,26 @@
 .content-markdown {
     margin: 0px 32px 0px 32px
 }
+.content-markdown p {
+    margin: 8px 0;
+}
+.content-markdown h1,
+.content-markdown h2,
+.content-markdown h3 {
+    margin: 16px 0 8px;
+}
+.content-markdown ul,
+.content-markdown ol {
+    margin: 8px 0 8px 24px;
+}
+.content-markdown code {
+    font-family: monospace;
+}
 
-.short-paragraph {
-    margin: 8px 0px 
+.citation-link {
+    margin: 8px 0px;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .citation-quote {

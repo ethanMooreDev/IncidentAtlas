@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useParams, useNavigate } from 'react-router-dom';
 import './IncidentDetailPage.css';
 import {
@@ -154,6 +155,7 @@ const IncidentDetailPage: React.FC = () => {
             setPostmortemError(null);
             setPublishState("idle");
             setLoadingPostmortem(true);
+            setSummary(null)
             try {
                 const preview = await previewPostmortem(id);
                 setPostmortem(preview);
@@ -202,7 +204,7 @@ const IncidentDetailPage: React.FC = () => {
                 <button onClick={handleGeneratePostmortem} disabled={loadingPostmortem}>Generate Postmortem</button>
             </div>
 
-            {loadingSummary && (
+            {(loadingSummary || loadingPostmortem) && (
                 <div className="loading-container">
                     <BlinkBlur color="#d9d9d9" size="small" />
                 </div>
@@ -215,22 +217,19 @@ const IncidentDetailPage: React.FC = () => {
                     <div>
                         <p><strong>Content:</strong></p>
                         <div className="content-markdown">
-                            {summary.contentMarkdown.split('\n').map((line, index) => (
-                                <p className="short-paragraph" key={index}>{line}</p>
-                            ))}
+                            <ReactMarkdown>{summary.contentMarkdown}</ReactMarkdown>
                         </div>
                     </div>
 
                     {summary.citations.length > 0 && (
                         <div>
                             <p><strong>Citations:</strong></p>
-                            <div className="content-markdown">
+                            <div>
                                 {summary.citations.map((citation) => (
                                     <div key={citation.incidentEventId}>
                                         <p
-                                            className="short-paragraph"
+                                            className="citation-link"
                                             onClick={() => scrollToEvent(citation.incidentEventId)}
-                                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
                                         >
                                             <strong>[{citation.sequence}]</strong> -- {citation.reason && citation.reason}
                                         </p>
@@ -249,20 +248,19 @@ const IncidentDetailPage: React.FC = () => {
                     {postmortem.generatedAtUtc && (
                         <p>Generated At: {new Date(postmortem.generatedAtUtc).toLocaleString()}</p>
                     )}
-                    {publishState !== "published" && <p className="draft-marker">DRAFT (not published)</p>}
-                    {postmortem.contentMarkdown.split("\n").map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                    ))}
+                    {/* {publishState !== "published" && <p className="draft-marker">DRAFT (not published)</p>} */}
+                    <div className="content-markdown">
+                        <ReactMarkdown>{postmortem.contentMarkdown}</ReactMarkdown>
+                    </div>
                     {postmortem.citations.length > 0 && (
                         <div>
                             <p><strong>Citations:</strong></p>
-                            <div className="content-markdown">
+                            <div>
                                 {postmortem.citations.map((citation) => (
                                     <div key={citation.incidentEventId}>
                                         <p
-                                            className="short-paragraph"
+                                            className="citation-link"
                                             onClick={() => scrollToEvent(citation.incidentEventId)}
-                                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
                                         >
                                             <strong>[{citation.sequence}]</strong> -- {citation.reason && citation.reason}
                                         </p>
@@ -278,14 +276,14 @@ const IncidentDetailPage: React.FC = () => {
                         </div>
                     )}
                     {postmortemError && <p className="error-message">{postmortemError}</p>}
-                    {publishState === "idle" && (
+                    {/* {publishState === "idle" && (
                         <button
                             onClick={handlePublishPostmortem}
                             disabled={isStale}
                         >
                             Publish Postmortem
                         </button>
-                    )}
+                    )} */}
                     {publishState === "publishing" && <p>Publishing...</p>}
                 </div>
             )}
