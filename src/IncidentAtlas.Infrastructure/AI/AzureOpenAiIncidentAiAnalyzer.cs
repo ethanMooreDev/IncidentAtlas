@@ -59,11 +59,12 @@ public sealed class AzureOpenAiIncidentAiAnalyzer : IIncidentAiAnalyzer
                 "You are an incident analysis assistant. " +
                 "Use ONLY the provided incident data. " +
                 "Return ONLY a JSON object that matches the provided JSON schema. " +
-                "Citations must reference provided sequence values in the format [sequence] but not incidentEventId."),
+                "Citations must reference provided sequence values in the format [sequence], without (), but not incidentEventId."),
             new UserChatMessage(
                 "Generate a concise incident summary for an on-call engineer.\n" +
                 "Include: current status, impact (if inferable from events), key timeline points.\n" +
-                "Every significant statement must be supported by citations, but .\n\n" +
+                "Every significant statement must be supported by citations.\n" + "" +
+                "If a cause is not explicitly confirmed in the incident events, phrase it as a hypothesis and cite the event that suggests it.\n\n" +
                 "INCIDENT_DATA_JSON:\n" + inputJson)
         };
 

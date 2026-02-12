@@ -26,6 +26,17 @@ const IncidentDetailPage: React.FC = () => {
     const [loadingPostmortem, setLoadingPostmortem] = useState(false);
     const [publishState, setPublishState] = useState<"idle" | "publishing" | "published">("idle");
 
+    const scrollToEvent = (eventId: string) => {
+        const element = document.getElementById(eventId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('highlight');
+            setTimeout(() => {
+                element.classList.remove('highlight');
+            }, 2000); // Highlight lasts for 2 seconds
+        }
+    };
+
     useEffect(() => {
         const fetchIncident = async () => {
             try {
@@ -148,9 +159,15 @@ const IncidentDetailPage: React.FC = () => {
                         <div>
                             <p><strong>Citations:</strong></p>
                             <div className="content-markdown">
-                                {summary.citations.map((citation, index) => (
-                                    <div key={index}>
-                                        <p className="short-paragraph" ><strong>[{citation.sequence}]</strong> -- {citation.reason && citation.reason}</p>
+                                {summary.citations.map((citation) => (
+                                    <div key={citation.incidentEventId}>
+                                        <p
+                                            className="short-paragraph"
+                                            onClick={() => scrollToEvent(citation.incidentEventId)}
+                                            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                        >
+                                            <strong>[{citation.sequence}]</strong> -- {citation.reason && citation.reason}
+                                        </p>
                                         {citation.quote && <p className="citation-quote"><strong>Quote:</strong> {citation.quote}</p>}
                                     </div>
                                 ))}
@@ -174,7 +191,7 @@ const IncidentDetailPage: React.FC = () => {
                 </thead>
                 <tbody>
                     {incident.events.map(event => (
-                        <tr key={event.incidentEventId}>
+                        <tr key={event.incidentEventId} id={event.incidentEventId} className="event-row">
                             <td>{event.sequence}</td>
                             <td>{new Date(event.occurredAtUtc).toLocaleString(undefined, { timeZone: 'UTC', timeZoneName: 'short' })}</td>
                             <td>{getEnumDisplayName(IncidentEventType, event.type)}</td>
