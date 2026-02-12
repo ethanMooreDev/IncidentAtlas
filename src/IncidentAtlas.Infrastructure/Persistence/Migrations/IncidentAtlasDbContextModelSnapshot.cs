@@ -31,6 +31,12 @@ namespace IncidentAtlas.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreatedAtUtc")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<int>("Severity")
                         .HasColumnType("int");
 
@@ -87,6 +93,45 @@ namespace IncidentAtlas.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("IncidentEvents", (string)null);
+                });
+
+            modelBuilder.Entity("IncidentAtlas.Infrastructure.Persistence.Models.PublishedPostmortem", b =>
+                {
+                    b.Property<Guid>("PublishedPostmortemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CitationsJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentMarkdown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("GeneratedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("IncidentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("InputEventSequenceMax")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("PublishedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PublishedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PublishedPostmortemId");
+
+                    b.HasIndex("IncidentId");
+
+                    b.ToTable("PublishedPostmortems", (string)null);
                 });
 
             modelBuilder.Entity("IncidentAtlas.Domain.Entities.IncidentEvent", b =>

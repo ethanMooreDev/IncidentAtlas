@@ -1,4 +1,5 @@
 ﻿using IncidentAtlas.Domain.Entities;
+using IncidentAtlas.Infrastructure.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ public class IncidentAtlasDbContext : DbContext
 {
     public DbSet<Incident> Incidents => Set<Incident>();
     public DbSet<IncidentEvent> IncidentEvents => Set<IncidentEvent>();
+    public DbSet<PublishedPostmortem> PublishedPostmortems => Set<PublishedPostmortem>();
+
 
     public IncidentAtlasDbContext(DbContextOptions<IncidentAtlasDbContext> options) : base(options)
     {

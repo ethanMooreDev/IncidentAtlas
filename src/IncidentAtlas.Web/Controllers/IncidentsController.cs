@@ -1,4 +1,7 @@
-﻿using IncidentAtlas.Application.Commands;
+﻿using IncidentAtlas.Application.AI.Commands;
+using IncidentAtlas.Application.AI.Handlers;
+using IncidentAtlas.Application.AI.Models;
+using IncidentAtlas.Application.Commands;
 using IncidentAtlas.Application.Handlers;
 using IncidentAtlas.Application.Interfaces;
 using IncidentAtlas.Application.Queries;

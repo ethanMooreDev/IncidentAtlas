@@ -1,0 +1,145 @@
+.incident-list-page {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #1f2a1f; /* Darker muted sage background */
+    color: #c9c9c9; /* Muted light text */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: #d9d9d9; /* Muted light text */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.loading-message {
+    font-size: 1.2rem;
+    color: #c9c9c9; /* Muted light text */
+    text-align: center;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: #e74c3c; /* Red for errors */
+    text-align: center;
+}
+
+.incident-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.incident-item {
+    background: #2e3e2e; /* Dark muted green */
+    color: #ffffff; /* White text for better contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.incident-item:nth-child(odd) {
+    background: #3f4f3f; /* Lighter muted green */
+}
+
+.incident-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.6);
+    background: #4f5f4f; /* Highlighted muted green */
+}
+
+.incident-item h2 {
+    margin: 0 0 10px;
+    color: #d9d9d9; /* Match the muted light gray for details */
+}
+
+.incident-item p {
+    margin: 5px 0;
+    line-height: 1.6;
+    color: #d9d9d9; /* Muted light gray for details */
+}
+
+.incident-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.incident-card {
+    background-color: #2e3e2e; /* Dark muted green */
+    color: #ffffff; /* White text for better contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    max-width: 100%; /* Prevent exceeding parent width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.incident-card:nth-child(odd) {
+    background-color: #3f4f3f; /* Lighter muted green */
+}
+
+.incident-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.6);
+    background-color: #4f5f4f; /* Highlighted muted green */
+}
+
+.incident-card h2 {
+    margin: 0 0 10px;
+    color: #d9d9d9; /* Match the muted light gray for details */
+}
+
+.incident-card p {
+    margin: 5px 0;
+    line-height: 1.6;
+    color: #d9d9d9; /* Muted light gray for details */
+}
+
+.incident-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #1e2b1e; /* Dark muted sage table background */
+    color: #c9c9c9; /* Muted light text */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    table-layout: fixed; /* Prevent columns from resizing based on content */
+}
+
+.incident-table th, .incident-table td {
+    border: 1px solid #2a3a2a; /* Subtle darker sage border */
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+
+.incident-table th {
+    background-color: #2a3a2a; /* Slightly darker header */
+    color: #d9d9d9; /* Muted light text */
+    font-weight: bold;
+}
+
+.incident-table tr:nth-child(even) {
+    background-color: #243224; /* Slightly lighter muted sage */
+}
+
+.incident-table tr:hover {
+    background-color: #2e3e2e; /* Highlight row on hover */
+}

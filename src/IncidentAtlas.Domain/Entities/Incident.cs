@@ -15,6 +15,8 @@ public class Incident
 
     private readonly List<IncidentEvent> _events = new();
     public IReadOnlyList<IncidentEvent> Events => _events;
+    public byte[] RowVersion { get; private set; } = Array.Empty<byte>();
+
 
     private Incident(
         Guid incidentId,

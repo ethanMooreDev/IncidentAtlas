@@ -1,0 +1,338 @@
+/* Updated Modal styles to match app theme */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker backdrop for better contrast */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #3a4b3a; /* Slightly lighter muted green */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.6);
+    width: 90%;
+    max-width: 500px;
+    color: #d9d9d9; /* Muted light gray text */
+    border: 2px solid #d9d9d9; /* Light gray border to make it pop */
+}
+
+.modal h2 {
+    color: #ffffff; /* Brighter white for better visibility */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal button {
+    background-color: #d9d9d9; /* Light gray */
+    color: #2e3e2e; /* Dark muted green */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.modal button:hover {
+    background-color: #c0c0c0; /* Slightly darker gray */
+}
+
+/* Align modal buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.modal-buttons .cancel-button {
+    background-color: #d9d9d9; /* Light gray */
+    color: #2e3e2e; /* Dark muted green */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-buttons .cancel-button:hover {
+    background-color: #c0c0c0; /* Slightly darker gray */
+}
+
+.modal-buttons .add-button {
+    background-color: #d9d9d9; /* Light gray */
+    color: #2e3e2e; /* Dark muted green */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-buttons .add-button:hover {
+    background-color: #c0c0c0; /* Slightly darker gray */
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    position: sticky;
+    top: 0;
+    background-color: inherit; /* Match the parent container's background color */
+    z-index: 1000; /* Keep it above other elements */
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border-color); /* Use app's border color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    overflow: hidden; /* Prevent overflow past the parent */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.button-container button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.button-container-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* Slightly brightened .append-event-button */
+.append-event-button {
+    background-color: #3f4f3f; /* Slightly brighter muted green */
+    color: #d9d9d9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.append-event-button:hover {
+    background-color: #435543; /* Slightly brighter on hover */
+}
+
+.incident-detail-container {
+    padding: 20px;
+    background-color: #2e3e2e; /* Dark muted green */
+    color: #d9d9d9; /* Muted light gray text */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    width: 100%; /* Take full width */
+    box-sizing: border-box;
+}
+
+.incident-detail-container h1 {
+    text-align: center;
+    color: #d9d9d9; /* Match text color */
+    margin-bottom: 20px;
+}
+
+.incident-detail {
+    margin-top: 20px;
+}
+
+.incident-detail p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #d9d9d9; /* Match text color */
+}
+
+.incident-detail strong {
+    color: #d9d9d9; /* Match text color */
+}
+
+.incident-events-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #3f4f3f; /* Lighter muted green */
+    color: #d9d9d9; /* Match text color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.incident-events-table th, .incident-events-table td {
+    border: 1px solid #4f5f4f; /* Slightly darker border */
+    padding: 10px;
+    text-align: left;
+    color: #d9d9d9; /* Match text color */
+}
+
+.incident-events-table th {
+    background-color: #4f5f4f; /* Darker muted green */
+    color: #d9d9d9; /* Match text color */
+    font-weight: bold;
+}
+
+.incident-events-table tr:nth-child(even) {
+    background-color: #2e3e2e; /* Alternate row color */
+}
+
+.incident-events-table tr:hover {
+    background-color: #4f5f4f; /* Highlight row on hover */
+}
+
+/* Highlight effect for scrolled-to rows */
+.event-row.highlight {
+    background-color: #738a73;
+    transition: background-color 0.5s ease;
+}
+
+/* Ensure highlight works for even rows */
+.event-row:nth-child(even).highlight {
+    background-color: #738a73 !important;
+}
+
+.event-row:nth-child(odd).highlight {
+    background-color: #738a73;
+}
+
+/* Match Add Event button color to Cancel button */
+.modal-buttons .add-button {
+    background-color: #d9d9d9; /* Light gray */
+    color: #2e3e2e; /* Dark muted green */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-buttons .add-button:hover {
+    background-color: #c0c0c0; /* Slightly darker gray */
+}
+
+/* Polish form styles for better user experience */
+.append-event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.append-event-form fieldset {
+    border: 1px solid #d9d9d9; /* Light gray border */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.append-event-form legend {
+    font-weight: bold;
+    color: #d9d9d9; /* Match text color */
+}
+
+.append-event-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #ffffff; /* Brighter text for better readability */
+}
+
+.append-event-form input,
+.append-event-form select,
+.append-event-form textarea {
+    padding: 10px;
+    border: 1px solid #c0c0c0; /* Neutral gray */
+    border-radius: 4px;
+    background-color: #2e3e2e; /* Dark muted green */
+    color: #d9d9d9; /* Light gray text */
+    font-size: 14px;
+}
+
+.append-event-form input:focus,
+.append-event-form select:focus,
+.append-event-form textarea:focus {
+    outline: none;
+    border-color: #d9d9d9; /* Highlighted border */
+    box-shadow: 0 0 5px rgba(217, 217, 217, 0.5);
+}
+
+.append-event-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.summary-container {
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 16px; /* Inner spacing */
+    margin: 16px 0; /* Space above and below */
+}
+
+.content-markdown {
+    margin: 0px 32px 0px 32px
+}
+.content-markdown p {
+    margin: 8px 0;
+}
+.content-markdown h1,
+.content-markdown h2,
+.content-markdown h3 {
+    margin: 16px 0 8px;
+}
+.content-markdown ul,
+.content-markdown ol {
+    margin: 8px 0 8px 24px;
+}
+.content-markdown code {
+    font-family: monospace;
+}
+
+.citation-link {
+    margin: 8px 0px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.citation-quote {
+    margin: 8px 24px 
+}
+
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Postmortem Draft Section */
+.postmortem-container {
+    border: 1px solid #d9d9d9;
+    padding: 16px;
+    margin-top: 24px;
+    border-radius: 8px;
+}
+
+.draft-marker {
+    color: #ff9800;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.warning-banner {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 12px;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+.published-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
