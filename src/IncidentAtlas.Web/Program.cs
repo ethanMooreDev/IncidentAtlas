@@ -38,7 +38,10 @@ builder.Services.AddScoped<GenerateIncidentSummaryHandler>();
 builder.Services.AddScoped<GenerateIncidentPostmortemDraftHandler>();
 builder.Services.AddScoped<PublishPostmortemHandler>();
 
-builder.Services.AddScoped<IIncidentAiAnalyzer, FakeIncidentAiAnalyzer>();
+builder.Services.Configure<AzureOpenAiOptions>(builder.Configuration.GetSection("AzureOpenAI"));
+
+//builder.Services.AddScoped<IIncidentAiAnalyzer, FakeIncidentAiAnalyzer>();
+builder.Services.AddScoped<IIncidentAiAnalyzer, AzureOpenAiIncidentAiAnalyzer>();
 
 
 builder.Services.AddCors(options =>

@@ -254,3 +254,21 @@
     padding: 16px; /* Inner spacing */
     margin: 16px 0; /* Space above and below */
 }
+
+.content-markdown {
+    margin: 0px 32px 0px 32px
+}
+
+.short-paragraph {
+    margin: 8px 0px 
+}
+
+.citation-quote {
+    margin: 8px 24px 
+}
+
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

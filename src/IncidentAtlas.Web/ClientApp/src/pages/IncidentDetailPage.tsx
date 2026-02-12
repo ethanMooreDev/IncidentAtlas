@@ -7,6 +7,7 @@ import { IncidentEventType, IncidentSeverity, IncidentStatus, AppendIncidentEven
 import { getEnumDisplayName } from '../utils/enumUtils';
 import AppendEventModal from '../components/AppendEventModal';
 import type { AiPreviewResult } from '../types/ai';
+import { BlinkBlur } from 'react-loading-indicators';
 
 const IncidentDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -62,9 +63,10 @@ const IncidentDetailPage: React.FC = () => {
     };
 
     const handleGenerateSummary = async () => {
-        if(id) {
+        if (id) {
             setLoadingSummary(true);
             setSummaryError(null);
+            setSummary(null);
             try {
                 const result = await previewSummary(id);
                 setSummary(result);
@@ -123,27 +125,36 @@ const IncidentDetailPage: React.FC = () => {
                 <button onClick={handleGeneratePostmortem} disabled={loadingPostmortem}>Generate Postmortem</button>
             </div>
 
+            {loadingSummary && (
+                <div className="loading-container">
+                    <BlinkBlur color="#d9d9d9" size="small" />
+                </div>
+            )}
+
             {summary && (
                 <div className="summary-container">
                     <h2>Summary</h2>
+                    <p><strong>Generated At:</strong> {new Date(summary.generatedAtUtc).toLocaleString()}</p>
                     <div>
                         <p><strong>Content:</strong></p>
-                        <p>{summary.contentMarkdown}</p>
+                        <div className="content-markdown">
+                            {summary.contentMarkdown.split('\n').map((line, index) => (
+                                <p className="short-paragraph" key={index}>{line}</p>
+                            ))}
+                        </div>
                     </div>
-                    <p><strong>Generated At:</strong> {new Date(summary.generatedAtUtc).toLocaleString()}</p>
-                    {summary.model && <p><strong>Model:</strong> {summary.model}</p>}
+
                     {summary.citations.length > 0 && (
                         <div>
-                            <h3>Citations</h3>
-                            <ul>
+                            <p><strong>Citations:</strong></p>
+                            <div className="content-markdown">
                                 {summary.citations.map((citation, index) => (
-                                    <li key={index}>
-                                        <p><strong>Sequence:</strong> {citation.sequence}</p>
-                                        {citation.quote && <p><strong>Quote:</strong> {citation.quote}</p>}
-                                        {citation.reason && <p><strong>Reason:</strong> {citation.reason}</p>}
-                                    </li>
+                                    <div key={index}>
+                                        <p className="short-paragraph" ><strong>[{citation.sequence}]</strong> -- {citation.reason && citation.reason}</p>
+                                        {citation.quote && <p className="citation-quote"><strong>Quote:</strong> {citation.quote}</p>}
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     )}
                 </div>
