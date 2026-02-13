@@ -63,7 +63,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<IncidentAtlasDbContext>();
-    db.Database.Migrate();
+    //db.Database.Migrate();
     var conn = db.Database.GetDbConnection();
     Console.WriteLine($"DB DataSource: {conn.DataSource}");
     Console.WriteLine($"DB Database:  {conn.Database}");
